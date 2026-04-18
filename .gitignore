@@ -1,0 +1,6 @@
+target/
+*/target/
+nbactions.xml
+nb-configuration.xml
+Thumbs.db
+.DS_Store

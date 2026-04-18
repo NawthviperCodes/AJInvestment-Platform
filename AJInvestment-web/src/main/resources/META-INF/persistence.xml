@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0"
+  xmlns="https://jakarta.ee/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    https://jakarta.ee/xml/ns/persistence
+    https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+  <persistence-unit name="AJInvestmentPU"
+                    transaction-type="JTA">
+
+    <!-- Must match jndi-name in standalone.xml EXACTLY -->
+    <jta-data-source>java:/jdbc/AJInvestmentDS</jta-data-source>
+
+    <!-- List all your @Entity classes here 
+    <class>com.aj.investment.model.Logdata</class>
+    <class>com.aj.investment.model.LogdataStatus</class>
+    <class>com.aj.investment.model.Clients</class> -->
+                                                  
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+    <properties>
+      <!-- Do not auto-create tables; DatabaseInitializer handles this -->
+      <property name="jakarta.persistence.schema-generation
+                        .database.action"
+                value="none"/>
+      <property name="hibernate.dialect"
+                value="org.hibernate.dialect.MySQLDialect"/>
+      <property name="hibernate.show_sql"   value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+
+  </persistence-unit>
+</persistence>
