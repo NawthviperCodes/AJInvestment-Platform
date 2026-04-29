@@ -1,1 +1,694 @@
-<h1>AJInvestment is now Working!</h1> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AJ Investment — Client Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim:   #7a6330;
+      --dark:       #0b0c0e;
+      --dark-2:     #13151a;
+      --dark-3:     #1c1f27;
+      --dark-4:     #252932;
+      --text:       #e2ddd4;
+      --text-muted: #7a7870;
+      --error:      #c0392b;
+      --success:    #27ae60;
+      --radius:     6px;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--dark);
+      font-family: 'Josefin Sans', sans-serif;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Diagonal gold line accent */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      right: -5%;
+      width: 1px;
+      height: 140%;
+      background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+      transform: rotate(-8deg);
+      pointer-events: none;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 720px;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 0.7s ease both;
+    }
+    .header .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 6px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .header .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 20px auto;
+    }
+    .header p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: var(--radius);
+      padding: 48px 48px;
+      animation: fadeUp 0.7s ease 0.1s both;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    /* Section labels */
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,168,76,0.18);
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: 100px 1fr; gap: 18px; }
+    .col-full { grid-column: 1 / -1; }
+
+    /* Field */
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .field label .req { color: var(--gold); margin-left: 2px; }
+
+    .field input,
+    .field select {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .field select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7870'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .field input::placeholder { color: var(--text-muted); opacity: 0.5; }
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(201,168,76,0.5);
+      background: var(--dark-4);
+    }
+    .field input.valid   { border-color: rgba(39,174,96,0.5); }
+    .field input.invalid { border-color: rgba(192,57,43,0.5); }
+
+    /* Inline validation message */
+    .field-msg {
+      font-size: 10px;
+      letter-spacing: 1px;
+      min-height: 14px;
+      transition: color 0.2s;
+    }
+    .field-msg.ok  { color: var(--success); }
+    .field-msg.err { color: var(--error); }
+
+    /* Password strength */
+    .strength-bar {
+      height: 2px;
+      background: var(--dark-4);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+      border-radius: 2px;
+    }
+
+    /* Profile picture upload */
+    .upload-zone {
+      border: 1px dashed rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--dark-3);
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--gold); background: var(--dark-4); }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+    .upload-zone:hover .upload-icon { transform: scale(1.1); }
+    .upload-zone p {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .upload-zone p span { color: var(--gold); }
+    .upload-zone small {
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0.5;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* Preview */
+    #preview-wrap {
+      display: none;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    #preview-wrap.show { display: flex; }
+    #img-preview {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold-dim);
+    }
+    #preview-name {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .remove-pic {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--error);
+      text-transform: uppercase;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+
+    /* Submit */
+    .submit-wrap {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--dark);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit:hover { background: var(--gold-light); }
+    .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { background: var(--gold-dim); cursor: not-allowed; opacity: 0.6; }
+
+    .btn-submit .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: var(--dark);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-submit.loading .btn-label { display: none; }
+    .btn-submit.loading .spinner  { display: block; }
+
+    .login-link {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .login-link a { color: var(--gold); text-decoration: none; }
+    .login-link a:hover { color: var(--gold-light); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: var(--radius);
+      padding: 14px 28px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #toast.success { border-color: rgba(39,174,96,0.4); color: var(--success); }
+    #toast.error   { border-color: rgba(192,57,43,0.4); color: var(--error); }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 580px) {
+      .card { padding: 32px 24px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 90px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="monogram">AJ</div>
+    <h1>Investment Group</h1>
+    <div class="divider"></div>
+    <p>Open your client account</p>
+  </div>
+
+  <div class="card">
+    <form id="regForm" action="RegisterClient" method="POST" enctype="multipart/form-data" novalidate>
+
+      <!-- ── PERSONAL INFO ── -->
+      <div class="section-label">Personal Information</div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" name="firstName" id="firstName" placeholder="John" required/>
+          <span class="field-msg" id="msg-firstName"></span>
+        </div>
+        <div class="field">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" name="lastName" id="lastName" placeholder="Smith" required/>
+          <span class="field-msg" id="msg-lastName"></span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:18px;">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" name="email" id="email" placeholder="john.smith@example.com" required/>
+        <span class="field-msg" id="msg-email"></span>
+      </div>
+
+      <!-- ── CONTACT ── -->
+      <div class="section-label">Contact Details</div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label>Code <span class="req">*</span></label>
+          <select name="countryCode" id="countryCode" required>
+            <option value="">—</option>
+            <option value="+27">🇿🇦 +27</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+86">🇨🇳 +86</option>
+            <option value="+55">🇧🇷 +55</option>
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+254">🇰🇪 +254</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Telephone <span class="req">*</span></label>
+          <input type="tel" name="telephone" id="telephone" placeholder="081 234 5678" required/>
+          <span class="field-msg" id="msg-telephone"></span>
+        </div>
+      </div>
+
+      <!-- ── PROFILE PICTURE ── -->
+      <div class="section-label">Profile Picture</div>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" name="profilePicture" id="profilePicture"
+               accept="image/jpeg,image/png,image/webp" aria-label="Upload profile picture"/>
+        <div class="upload-icon">📷</div>
+        <p><span>Click to upload</span> or drag & drop</p>
+        <small>JPG, PNG or WEBP · max 5 MB</small>
+      </div>
+      <div id="preview-wrap">
+        <img id="img-preview" src="" alt="Preview"/>
+        <div>
+          <div id="preview-name"></div>
+          <button type="button" class="remove-pic" id="removePic">✕ Remove</button>
+        </div>
+      </div>
+      <span class="field-msg" id="msg-picture"></span>
+
+      <!-- ── ACCOUNT ── -->
+      <div class="section-label">Account Credentials</div>
+
+      <div class="field">
+        <label>Username <span class="req">*</span></label>
+        <input type="text" name="username" id="username"
+               placeholder="johnsmith_aj" autocomplete="username" required/>
+        <span class="field-msg" id="msg-username"></span>
+      </div>
+
+      <div class="grid-2" style="margin-top:18px;">
+        <div class="field">
+          <label>Password <span class="req">*</span></label>
+          <input type="password" name="password" id="password"
+                 placeholder="••••••••" autocomplete="new-password" required/>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+          <span class="field-msg" id="msg-password"></span>
+        </div>
+        <div class="field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <input type="password" name="confirmPassword" id="confirmPassword"
+                 placeholder="••••••••" autocomplete="new-password" required/>
+          <span class="field-msg" id="msg-confirm"></span>
+        </div>
+      </div>
+
+      <!-- ── SUBMIT ── -->
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-label">Create Account</span>
+          <span class="spinner"></span>
+        </button>
+        <p class="login-link">Already a client? <a href="login.html">Sign in</a></p>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  /* ── Helpers ── */
+  const $ = id => document.getElementById(id);
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const USERNAME_RE = /^[a-zA-Z0-9_]{4,30}$/;
+
+  function setMsg(id, text, type) {
+    const el = $(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'field-msg ' + (type || '');
+  }
+  function markField(id, valid) {
+    const inp = $(id);
+    if (!inp) return;
+    inp.classList.toggle('valid',   valid === true);
+    inp.classList.toggle('invalid', valid === false);
+  }
+
+  /* ── Email validation ── */
+  $('email').addEventListener('blur', () => {
+    const v = $('email').value.trim();
+    if (!v) { setMsg('msg-email','Email is required','err'); markField('email',false); return; }
+    if (!EMAIL_RE.test(v)) { setMsg('msg-email','Enter a valid email address','err'); markField('email',false); return; }
+    setMsg('msg-email','✓ Looks good','ok'); markField('email',true);
+  });
+  $('email').addEventListener('input', () => {
+    const v = $('email').value.trim();
+    if (EMAIL_RE.test(v)) { setMsg('msg-email','✓ Looks good','ok'); markField('email',true); }
+    else { setMsg('msg-email','',''); markField('email',null); }
+  });
+
+  /* ── Name validation ── */
+  ['firstName','lastName'].forEach(id => {
+    $(id).addEventListener('blur', () => {
+      const v = $(id).value.trim();
+      if (v.length < 2) { setMsg('msg-'+id,'Minimum 2 characters','err'); markField(id,false); }
+      else              { setMsg('msg-'+id,'','ok'); markField(id,true); }
+    });
+  });
+
+  /* ── Telephone ── */
+  $('telephone').addEventListener('blur', () => {
+    const v = $('telephone').value.replace(/\s/g,'');
+    if (!/^\d{7,15}$/.test(v)) { setMsg('msg-telephone','Enter a valid phone number','err'); markField('telephone',false); }
+    else                        { setMsg('msg-telephone','','ok'); markField('telephone',true); }
+  });
+
+  /* ── Username ── */
+  $('username').addEventListener('blur', () => {
+    const v = $('username').value.trim();
+    if (!USERNAME_RE.test(v)) {
+      setMsg('msg-username','4–30 characters, letters/numbers/underscores only','err');
+      markField('username',false);
+    } else { setMsg('msg-username','✓ Username available','ok'); markField('username',true); }
+  });
+
+  /* ── Password strength ── */
+  $('password').addEventListener('input', () => {
+    const v   = $('password').value;
+    let score = 0;
+    if (v.length >= 8)          score++;
+    if (/[A-Z]/.test(v))        score++;
+    if (/[0-9]/.test(v))        score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+
+    const fill = $('strengthFill');
+    const msgs = ['','Weak','Fair','Good','Strong'];
+    const cols = ['','#c0392b','#e67e22','#f1c40f','#27ae60'];
+    fill.style.width  = (score * 25) + '%';
+    fill.style.background = cols[score];
+    if (v.length > 0) setMsg('msg-password', msgs[score], score >= 3 ? 'ok' : 'err');
+    else              setMsg('msg-password','','');
+
+    // re-check confirm
+    if ($('confirmPassword').value)
+      $('confirmPassword').dispatchEvent(new Event('input'));
+  });
+
+  /* ── Confirm password ── */
+  $('confirmPassword').addEventListener('input', () => {
+    const pw  = $('password').value;
+    const cpw = $('confirmPassword').value;
+    if (!cpw) { setMsg('msg-confirm','',''); return; }
+    if (pw === cpw) { setMsg('msg-confirm','✓ Passwords match','ok'); markField('confirmPassword',true); }
+    else            { setMsg('msg-confirm','Passwords do not match','err'); markField('confirmPassword',false); }
+  });
+
+  /* ── Profile picture ── */
+  $('profilePicture').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const maxMB = 5;
+    if (file.size > maxMB * 1024 * 1024) {
+      setMsg('msg-picture', 'File exceeds 5 MB limit', 'err');
+      this.value = '';
+      return;
+    }
+    setMsg('msg-picture','','');
+    const reader = new FileReader();
+    reader.onload = e => {
+      $('img-preview').src = e.target.result;
+      $('preview-name').textContent = file.name;
+      $('preview-wrap').classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  $('removePic').addEventListener('click', () => {
+    $('profilePicture').value = '';
+    $('preview-wrap').classList.remove('show');
+    $('img-preview').src = '';
+    setMsg('msg-picture','','');
+  });
+
+  /* ── Form submit ── */
+  $('regForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Client-side final validation
+    let ok = true;
+
+    const firstName = $('firstName').value.trim();
+    const lastName  = $('lastName').value.trim();
+    const email     = $('email').value.trim();
+    const code      = $('countryCode').value;
+    const phone     = $('telephone').value.trim();
+    const username  = $('username').value.trim();
+    const password  = $('password').value;
+    const confirm   = $('confirmPassword').value;
+
+    if (firstName.length < 2) { setMsg('msg-firstName','Required','err'); markField('firstName',false); ok=false; }
+    if (lastName.length  < 2) { setMsg('msg-lastName','Required','err'); markField('lastName',false); ok=false; }
+    if (!EMAIL_RE.test(email)) { setMsg('msg-email','Valid email required','err'); markField('email',false); ok=false; }
+    if (!code) { showToast('Please select a country code', 'error'); ok=false; }
+    if (!/^\d{7,15}$/.test(phone.replace(/\s/g,''))) { setMsg('msg-telephone','Invalid phone','err'); markField('telephone',false); ok=false; }
+    if (!USERNAME_RE.test(username)) { setMsg('msg-username','Invalid username','err'); markField('username',false); ok=false; }
+    if (password.length < 8) { setMsg('msg-password','Minimum 8 characters','err'); ok=false; }
+    if (password !== confirm) { setMsg('msg-confirm','Passwords do not match','err'); markField('confirmPassword',false); ok=false; }
+
+    if (!ok) { showToast('Please fix the errors above', 'error'); return; }
+
+    // Submit
+    const btn = $('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    try {
+      const data = new FormData(this);
+      const res  = await fetch('/AJInvestment/RegisterClient', { method: 'POST', body: data });
+      const json = await res.json();
+
+      if (res.ok && json.status === 'success') {
+        showToast('Account created — check your email', 'success');
+        setTimeout(() => window.location.href = 'login.html', 2500);
+      } else {
+        showToast(json.message || 'Registration failed', 'error');
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    } catch(err) {
+      showToast('Server error — please try again', 'error');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  });
+
+  /* ── Toast ── */
+  function showToast(msg, type) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.className   = 'show ' + (type || '');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = ''; }, 3500);
+  }
+</script>
+</body>
+</html>

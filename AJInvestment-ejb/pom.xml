@@ -3,60 +3,41 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
     http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.aj.investment</groupId>
     <artifactId>AJInvestment</artifactId>
     <version>1.0-SNAPSHOT</version>
-  </parent>
-
-  <artifactId>AJInvestment-web</artifactId>
-  <packaging>war</packaging>
-  <name>AJInvestment-web</name>
+    <!-- no <relativePath> needed — Maven finds it automatically -->
+</parent>
+  <artifactId>AJInvestment-ejb</artifactId>
+  <packaging>ejb</packaging>
+  <name>AJInvestment-ejb</name>
 
   <dependencies>
-    <!-- Jakarta EE 10 full API — provided by WildFly -->
     <dependency>
       <groupId>jakarta.platform</groupId>
       <artifactId>jakarta.jakartaee-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- Gson for JSON serialization -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <!-- MySQL driver — provided by WildFly module -->
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <scope>provided</scope>
     </dependency>
-    
-    <!-- Add this to AJInvestment-web/pom.xml dependencies -->
-<dependency>
-  <groupId>com.aj.investment</groupId>
-  <artifactId>AJInvestment-ejb</artifactId>
-  <version>${project.version}</version>
-  <type>ejb</type>
-</dependency>
-    
-    
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.4.0</version>
+        <artifactId>maven-ejb-plugin</artifactId>
+        <version>3.2.1</version>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <ejbVersion>3.2</ejbVersion>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>

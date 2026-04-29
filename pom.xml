@@ -12,9 +12,10 @@
   <name>AJInvestment</name>
 
   <modules>
-    <module>AJInvestment-ear</module>
+    <module>AJInvestment-ejb</module>
     <module>AJInvestment-web</module>
-  </modules>
+    <module>AJInvestment-ear</module>
+</modules>
 
   <properties>
     <maven.compiler.source>25</maven.compiler.source>

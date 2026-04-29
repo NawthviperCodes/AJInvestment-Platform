@@ -11,19 +11,19 @@ public class DatabaseInitializer {
     public static void initialize() {
 
         try {
-        DBConnection.ensureDatabaseExists();
-    } catch (SQLException e) {
-        System.err.println("Could not create database: " + e.getMessage());
-        return;
-    }
-        
-         // Now connect and create tables — but use direct JDBC with DB in URL
-    String url = "jdbc:mysql://localhost:3306/" + DB_NAME + 
-                 "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    
+            DBConnection.ensureDatabaseExists();
+        } catch (SQLException e) {
+            System.err.println("Could not create database: " + e.getMessage());
+            return;
+        }
+
+        // Now connect and create tables — but use direct JDBC with DB in URL
+        String url = "jdbc:mysql://localhost:3306/" + DB_NAME +
+                     "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
-        stmt.executeUpdate("USE `aj_investment`"); // select the database
+            stmt.executeUpdate("USE `aj_investment`"); // select the database
 
             System.out.println("Connected to " + DB_NAME + ". Starting table verification...");
 
@@ -112,6 +112,7 @@ public class DatabaseInitializer {
                         firstName      VARCHAR(255),
                         lastName       VARCHAR(255),
                         email          VARCHAR(255) UNIQUE,
+                        countryCode    VARCHAR(10),
                         telephone      VARCHAR(20),
                         username       VARCHAR(255) UNIQUE,
                         password       VARCHAR(255),
@@ -191,6 +192,95 @@ public class DatabaseInitializer {
 
             } catch (SQLException e) {
                 System.err.println("Error with ClientID_ServicesID: " + e.getMessage());
+            }
+
+            // 8. UserRoleID_LogdataID
+            try {
+                stmt.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS UserRoleID_LogdataID (
+                        id         INT AUTO_INCREMENT PRIMARY KEY,
+                        logdataId  INT,
+                        roleId     INT,
+                        INDEX (logdataId),
+                        INDEX (roleId),
+                        FOREIGN KEY (logdataId)
+                            REFERENCES Logdata(id)
+                            ON DELETE CASCADE,
+                        FOREIGN KEY (roleId)
+                            REFERENCES Userroles(id)
+                            ON DELETE CASCADE
+                    ) ENGINE=InnoDB
+                """);
+
+                System.out.println("Check complete: UserRoleID_LogdataID");
+
+            } catch (SQLException e) {
+                System.err.println("Error with UserRoleID_LogdataID: " + e.getMessage());
+            }
+
+            // 9. AddressID_LogdataID
+            try {
+                stmt.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS AddressID_LogdataID (
+                        id        INT AUTO_INCREMENT PRIMARY KEY,
+                        logdataId INT,
+                        addressId INT,
+                        INDEX (logdataId),
+                        INDEX (addressId),
+                        FOREIGN KEY (logdataId)
+                            REFERENCES Logdata(id)
+                            ON DELETE CASCADE,
+                        FOREIGN KEY (addressId)
+                            REFERENCES Address(id)
+                            ON DELETE CASCADE
+                    ) ENGINE=InnoDB
+                """);
+
+                System.out.println("Check complete: AddressID_LogdataID");
+
+            } catch (SQLException e) {
+                System.err.println("Error with AddressID_LogdataID: " + e.getMessage());
+            }
+
+            // 10. LogdataID_Email_verification_token
+            try {
+                stmt.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS LogdataID_Email_verification_token (
+                        logdata_id               INT          PRIMARY KEY,
+                        email_verification_token VARCHAR(255) UNIQUE NOT NULL,
+                        created_at               TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (logdata_id)
+                            REFERENCES Logdata(id)
+                            ON DELETE CASCADE
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+
+                System.out.println("Check complete: LogdataID_Email_verification_token");
+
+            } catch (SQLException e) {
+                System.err.println("Error with LogdataID_Email_verification_token: " + e.getMessage());
+            }
+
+            // 11. PasswordResetTokens
+            try {
+                stmt.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS PasswordResetTokens (
+                        token_id   INT AUTO_INCREMENT PRIMARY KEY,
+                        logdata_id INT          NOT NULL,
+                        token      VARCHAR(255) UNIQUE NOT NULL,
+                        expires_at DATETIME     NOT NULL,
+                        created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+                        INDEX (logdata_id),
+                        FOREIGN KEY (logdata_id)
+                            REFERENCES Logdata(id)
+                            ON DELETE CASCADE
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+
+                System.out.println("Check complete: PasswordResetTokens");
+
+            } catch (SQLException e) {
+                System.err.println("Error with PasswordResetTokens: " + e.getMessage());
             }
 
             System.out.println("Initialization process finished.");

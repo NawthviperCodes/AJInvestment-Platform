@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AJ Investment — Client Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim:   #7a6330;
+      --dark:       #0b0c0e;
+      --dark-2:     #13151a;
+      --dark-3:     #1c1f27;
+      --dark-4:     #252932;
+      --text:       #e2ddd4;
+      --text-muted: #7a7870;
+      --error:      #c0392b;
+      --success:    #27ae60;
+      --radius:     6px;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--dark);
+      font-family: 'Josefin Sans', sans-serif;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Diagonal gold line accent */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      right: -5%;
+      width: 1px;
+      height: 140%;
+      background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+      transform: rotate(-8deg);
+      pointer-events: none;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .header .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 6px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .header .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 20px auto;
+    }
+
+    .header p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: var(--radius);
+      padding: 48px;
+      animation: fadeUp 0.7s ease 0.1s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    /* Section labels */
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,168,76,0.18);
+    }
+
+    /* Field */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 24px;
+    }
+
+    .field:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .field label .req {
+      color: var(--gold);
+      margin-left: 2px;
+    }
+
+    .field input {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .field input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .field input:focus {
+      border-color: rgba(201,168,76,0.5);
+      background: var(--dark-4);
+    }
+
+    .field input.valid {
+      border-color: rgba(39,174,96,0.5);
+    }
+
+    .field input.invalid {
+      border-color: rgba(192,57,43,0.5);
+    }
+
+    /* Inline validation message */
+    .field-msg {
+      font-size: 10px;
+      letter-spacing: 1px;
+      min-height: 14px;
+      transition: color 0.2s;
+    }
+
+    .field-msg.ok {
+      color: var(--success);
+    }
+
+    .field-msg.err {
+      color: var(--error);
+    }
+
+    /* Remember & Forgot */
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      margin-bottom: 32px;
+      gap: 16px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .remember-me input[type="checkbox"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 3px;
+      background: var(--dark-3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .remember-me input[type="checkbox"]:hover {
+      border-color: var(--gold);
+    }
+
+    .remember-me input[type="checkbox"]:checked {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .remember-me input[type="checkbox"]:checked::after {
+      content: '✓';
+      color: var(--dark);
+      font-weight: bold;
+    }
+
+    .remember-me label {
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .forgot-link {
+      text-align: right;
+    }
+
+    .forgot-link a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link a:hover {
+      color: var(--gold-light);
+    }
+
+    /* Submit */
+    .submit-wrap {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--dark);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      background: var(--gold-light);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      background: var(--gold-dim);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-submit .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: var(--dark);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    .btn-submit.loading .btn-label {
+      display: none;
+    }
+
+    .btn-submit.loading .spinner {
+      display: block;
+    }
+
+    /* Register link */
+    .register-link {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .register-link a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      color: var(--gold-light);
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: var(--radius);
+      padding: 14px 28px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #toast.success {
+      border-color: rgba(39,174,96,0.4);
+      color: var(--success);
+    }
+
+    #toast.error {
+      border-color: rgba(192,57,43,0.4);
+      color: var(--error);
+    }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 580px) {
+      .card {
+        padding: 32px 24px;
+      }
+
+      .options {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .forgot-link {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="monogram">AJ</div>
+    <h1>Investment Group</h1>
+    <div class="divider"></div>
+    <p>Access your client account</p>
+  </div>
+
+  <div class="card">
+    <form id="loginForm" action="LoginClient" method="POST" novalidate>
+
+      <!-- ── CREDENTIALS ── -->
+      <div class="section-label">Sign In</div>
+
+      <div class="field">
+        <label>Username or Email <span class="req">*</span></label>
+        <input type="text" name="username" id="username" 
+               placeholder="johnsmith_aj or john@example.com" required/>
+        <span class="field-msg" id="msg-username"></span>
+      </div>
+
+      <div class="field">
+        <label>Password <span class="req">*</span></label>
+        <input type="password" name="password" id="password" 
+               placeholder="••••••••" autocomplete="current-password" required/>
+        <span class="field-msg" id="msg-password"></span>
+      </div>
+
+      <!-- ── OPTIONS ── -->
+      <div class="options">
+        <div class="remember-me">
+          <input type="checkbox" name="rememberMe" id="rememberMe"/>
+          <label for="rememberMe">Remember me</label>
+        </div>
+        <div class="forgot-link">
+          <a href="forgot_password.html">Forgot password?</a>
+        </div>
+      </div>
+
+      <!-- ── SUBMIT ── -->
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-label">Sign In</span>
+          <span class="spinner"></span>
+        </button>
+        <p class="register-link">New to AJ Investment? <a href="index.html">Create account</a></p>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  /* ── Helpers ── */
+  const $ = id => document.getElementById(id);
+
+  function setMsg(id, text, type) {
+    const el = $(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'field-msg ' + (type || '');
+  }
+
+  function markField(id, valid) {
+    const inp = $(id);
+    if (!inp) return;
+    inp.classList.toggle('valid', valid === true);
+    inp.classList.toggle('invalid', valid === false);
+  }
+
+  function showToast(msg, type) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.className = 'show ' + (type || '');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = ''; }, 3500);
+  }
+
+  /* ── Username/Email validation ── */
+  $('username').addEventListener('blur', () => {
+    const v = $('username').value.trim();
+    if (!v) {
+      setMsg('msg-username', 'Username or email is required', 'err');
+      markField('username', false);
+    } else {
+      setMsg('msg-username', '', '');
+      markField('username', null);
+    }
+  });
+
+  $('username').addEventListener('input', () => {
+    const v = $('username').value.trim();
+    if (v.length > 0) {
+      setMsg('msg-username', '', '');
+      markField('username', null);
+    }
+  });
+
+  /* ── Password validation ── */
+  $('password').addEventListener('blur', () => {
+    const v = $('password').value;
+    if (!v) {
+      setMsg('msg-password', 'Password is required', 'err');
+      markField('password', false);
+    } else {
+      setMsg('msg-password', '', '');
+      markField('password', null);
+    }
+  });
+
+  $('password').addEventListener('input', () => {
+    const v = $('password').value;
+    if (v.length > 0) {
+      setMsg('msg-password', '', '');
+      markField('password', null);
+    }
+  });
+
+  /* ── Form submit ── */
+  $('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Client-side validation
+    let ok = true;
+
+    const username = $('username').value.trim();
+    const password = $('password').value;
+
+    if (!username) {
+      setMsg('msg-username', 'Required', 'err');
+      markField('username', false);
+      ok = false;
+    }
+
+    if (!password) {
+      setMsg('msg-password', 'Required', 'err');
+      markField('password', false);
+      ok = false;
+    }
+
+    if (!ok) {
+      showToast('Please fill in all fields', 'error');
+      return;
+    }
+
+    // Submit
+    const btn = $('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    try {
+      const data = new FormData(this);
+      const res = await fetch('/AJInvestment/LoginClient', {
+        method: 'POST',
+        body: data
+      });
+
+      const json = await res.json();
+
+      if (res.ok && json.status === 'success') {
+        showToast('Login successful — redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } else {
+        showToast(json.message || 'Login failed', 'error');
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    } catch (err) {
+      showToast('Server error — please try again', 'error');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  });
+
+  /* ── Remember me (LocalStorage) ── */
+  const rememberCheckbox = $('rememberMe');
+  const usernameInput = $('username');
+
+  // Load saved username if exists
+  if (localStorage.getItem('aj-remember-me') === 'true') {
+    const savedUsername = localStorage.getItem('aj-username');
+    if (savedUsername) {
+      usernameInput.value = savedUsername;
+      rememberCheckbox.checked = true;
+    }
+  }
+
+  // Save username when form submits (if checkbox checked)
+  $('loginForm').addEventListener('submit', function() {
+    if (rememberCheckbox.checked) {
+      localStorage.setItem('aj-remember-me', 'true');
+      localStorage.setItem('aj-username', usernameInput.value);
+    } else {
+      localStorage.removeItem('aj-remember-me');
+      localStorage.removeItem('aj-username');
+    }
+  });
+</script>
+
+</body>
+</html>
