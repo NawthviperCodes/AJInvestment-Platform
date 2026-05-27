@@ -2,7 +2,7 @@ package com.aj.investment.service;
 
 import com.aj.investment.transaction.FileUploadCleanupCallback;
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.Part;
  import jakarta.transaction.TransactionSynchronizationRegistry;
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class FileUploadService {
      *   • We can now use it to register cleanup logic
      * ═════════════════════════════════════════════════════════════════════
      */
-    @Inject
+    @Resource
     private TransactionSynchronizationRegistry txRegistry;
 
     /**
