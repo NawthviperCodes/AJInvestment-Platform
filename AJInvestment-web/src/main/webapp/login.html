@@ -582,9 +582,12 @@
     btn.disabled = true;
 
     try {
-      const data = new FormData(this);
+      const data = new URLSearchParams(new FormData(this));
       const res = await fetch('/AJInvestment/LoginClient', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
         body: data
       });
 
