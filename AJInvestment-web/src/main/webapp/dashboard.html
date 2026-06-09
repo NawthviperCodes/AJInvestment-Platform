@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJ Investment - Dashboard</title>
+  <style>
+    :root {
+      --dark: #10131a;
+      --panel: #171b24;
+      --gold: #d7aa45;
+      --text: #f5f1e8;
+      --muted: #a8adba;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--dark);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    main {
+      width: min(760px, 100%);
+      background: var(--panel);
+      border: 1px solid rgba(215, 170, 69, 0.28);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    a {
+      display: inline-block;
+      color: var(--dark);
+      background: var(--gold);
+      padding: 12px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Welcome to AJ Investment</h1>
+    <p>You have logged in successfully. This dashboard confirms that client authentication is working.</p>
+    <a href="login.html">Sign out</a>
+  </main>
+</body>
+</html>
