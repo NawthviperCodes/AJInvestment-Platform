@@ -1,5 +1,13 @@
 # AJInvestment Platform
 
+Live demo:
+
+```text
+http://ajinvestment-thabo.southafricanorth.cloudapp.azure.com:8080/AJInvestment
+```
+
+[Open the AJInvestment live demo](http://ajinvestment-thabo.southafricanorth.cloudapp.azure.com:8080/AJInvestment)
+
 AJInvestment Platform is a Java/Jakarta EE web application for client registration,
 login, email verification, password reset, and facial-login integration. The project
 is built as a multi-module NetBeans/Maven application and deployed to WildFly.
@@ -85,13 +93,7 @@ environment uses WildFly as the Jakarta EE application server and MySQL for pers
 client data. The Azure DNS name points to the VM public IP, and the application is
 currently exposed over HTTP on port `8080`.
 
-Live demo:
 
-```text
-http://ajinvestment-thabo.southafricanorth.cloudapp.azure.com:8080/AJInvestment
-```
-
-[Open the AJInvestment live demo](http://ajinvestment-thabo.southafricanorth.cloudapp.azure.com:8080/AJInvestment)
 
 ## Local Run Notes
 
